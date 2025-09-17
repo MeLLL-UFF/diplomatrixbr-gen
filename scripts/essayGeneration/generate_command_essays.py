@@ -1,22 +1,24 @@
 import cohere
+from funcs import getYearsList
 import os
+import json
 
 co = cohere.Client(api_key="YOUR API KEY HERE")
 
 temps = [0.3, 0.5, 0.7]
 
-srcpath = "ProvasDiplomatas"
+#Always remember to check if os.getcwd == "diplomatrixbr-gen"
+yearlist = getYearsList()
 
-dirlist = os.listdir(srcpath)
-dirlist.pop(dirlist.index("2022"))
-dirlist.pop(dirlist.index("2023"))
+for year in yearlist:
+    with open(os.path.join(os.getcwd(), f"base_essays\{year}.json"), 'r', encoding='utf8') as p:
+        yearJson = json.dump(p)
+        prompt = yearJson["Pergunta"]
 
-for dir in dirlist:
-    with open(os.path.join(srcpath, dir, "prompt.txt"), 'r', encoding='utf8') as p:
-        prompt = p.read()
+    # Path to store generated essays
+    path = os.path.join(os.getcwd(), f"results\\gen_essays\\{year}\\COMMAND-R+")
 
-    # Caminho para armazenar as redações geradas
-    path = os.path.join(srcpath, dir, "RedacoesModelos\\COMMAND R")
+    os.makedirs(path, exist_ok=True)
 
     for temp in temps:
         response = co.chat(

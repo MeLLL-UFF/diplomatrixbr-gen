@@ -5,11 +5,7 @@ import torch
 import gc
 import os
 import json
-
-def getYearsList():
-    path = os.path.join(os.getcwd(), "base_essays")
-    return list(map(lambda s: s.split(".")[0], os.listdir(path)))
-
+from funcs import getYearsList
 
 def main(model_id, hf_token, temps, output_path):
     login(token=hf_token)
