@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from funcs import qtd_frases, qtd_palavras
+from funcs import qtd_frases, qtd_palavras, namingConsistency
 
 def read_file_content(file_path):
     """ Lê o conteúdo de um arquivo de texto e retorna como uma string. """
@@ -34,10 +34,8 @@ for year in yearList:
                 filename = os.path.splitext(filename)[0]
                 text_content = read_file_content(os.path.join(modelDir, text))
                 data.append({
-                    #TODO: MODEL NAMING CONSISTENCY!!!
-                    #Check for function in graphs folder
-                    'modelo': filename,
-
+                    #MODEL NAMING CONSISTENCY!!!
+                    'modelo': namingConsistency(filename),
 
                     'Quantidade de Palavras': qtd_palavras(text_content),
                     'Quantidade de Frases': qtd_frases(text_content),
