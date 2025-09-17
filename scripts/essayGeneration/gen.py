@@ -4,6 +4,12 @@ import transformers
 import torch
 import gc
 import os
+import json
+
+def getYearsList():
+    path = os.path.join(os.getcwd(), "base_essays")
+    return list(map(lambda s: s.split(".")[0], os.listdir(path)))
+
 
 def main(model_id, hf_token, temps, output_path):
     login(token=hf_token)
@@ -22,51 +28,60 @@ def main(model_id, hf_token, temps, output_path):
         device=device,
     )
 
-    instruct = '''###Contexto
-    Você é um candidato que deverá elaborar uma redação para concorrer ao cargo de diplomata brasileiro. Sua redação será avaliada de acordo com os seguintes Critérios e Instrução.
+    yearList = getYearsList()
 
-    ###Critérios
-    Apresentação/impressão geral do texto, coerência, legibilidade e estilo;
-    Capacidade de argumentação (objetividade, sistematização, conteúdo e pertinência das informações);
-    Capacidade de análise e reflexão;
-    A redação deve ter entre 65 e 70 linhas;
+    baseEssaysPath = "base_essays"
 
-    ###Instrução
-    Com base na leitura dos excertos de troca de cartas entre Albert Einstein e Sigmund Freud no ano de 1932, discorra acerca do papel da diplomacia, fazendo referência a uma ou mais ideias mencionadas nos textos apresentados e a momentos históricos.
+    for year in yearList:
+        with open(os.path.join(baseEssaysPath, f"{year}.json"), "r", encoding="utf-8") as j:
+            yearJson = json.load(j)
+            prompt = yearJson["Pergunta"]
 
-    Albert Einstein: “Existe alguma forma de livrar a humanidade da ameaça de guerra? É possível controlar a evolução da mente do homem, de modo a torná-lo à prova das psicoses do ódio e da destrutividade?” Sigmund Freud: “O senhor começa com a relação entre direito e poder. Posso substituir a palavra ‘poder’ por violência? Conflitos de interesse entre os homens se resolvem mediante o emprego da violência. Esse é o estado original, o domínio do poder maior, da violência crua ou apoiada na inteligência. Sabemos que houve um caminho da violência para o direito. A humanidade trocou numerosas, mesmo intermináveis pequenas guerras por raras, mas tanto mais devastadoras grandes guerras. Quando os homens são incitados à guerra, neles há toda uma série de motivos a responder afirmativamente, nobres e baixos. Não se trata de eliminar completamente as tendências agressivas humanas; pode-se tentar desviá-las a ponto de não terem que se manifestar na guerra. Se a disposição para a guerra é uma decorrência do instinto de destruição, então será natural recorrer, contra ela, ao antagonista desse instinto. Tudo o que produz laços emocionais entre as pessoas tem efeito contrário à guerra. Essas ligações podem ser de dois tipos. Primeiro, relações como as que se tem com um objeto amoroso. O outro tipo de ligação emocional é o que se dá pela identificação. Em sua forma atual, a guerra já não oferece oportunidade de satisfazer o antigo ideal heroico, e no futuro, graças ao aperfeiçoamento dos meios de destruição, uma guerra significaria a eliminação de um ou até mesmo de ambos os adversários. Não se podem condenar igualmente todas as espécies de guerras; enquanto houver nações e reinos que estejam dispostos à destruição implacável de outros, esses outros têm que se armar para a guerra. Mas pode não ser uma esperança utópica que a influência desses dois fatores, da atitude cultural e do justificado medo das consequências de uma guerra futura, venha a terminar com as guerras. Tudo o que promove a evolução cultural também trabalha contra a guerra.'''
+        instruct = f'''###Contexto
+        Você é um candidato que deverá elaborar uma redação para concorrer ao cargo de diplomata brasileiro. Sua redação será avaliada de acordo com os seguintes Critérios e Instrução.
 
-    torch.cuda.empty_cache()
-    torch.cuda.synchronize()
+        ###Critérios
+        Apresentação/impressão geral do texto, coerência, legibilidade e estilo;
+        Capacidade de argumentação (objetividade, sistematização, conteúdo e pertinência das informações);
+        Capacidade de análise e reflexão;
+        A redação deve ter entre 65 e 70 linhas;
 
-    for temp in temps:
-        messages = [
-            {"role": "user", "content": instruct}
-        ]
-        
-        outputs = pipeline(
-            messages,
-            max_new_tokens=1024,
-            do_sample=True,
-            temperature=temp,
-            top_p=0.4,
-        )
+        ###Instrução
+        {prompt}'''
 
-        generated_texts = outputs[0]["generated_text"][1]['content']#[len(instruct):]
-        #print(generated_texts)
-        del outputs
-        del messages
         torch.cuda.empty_cache()
-        gc.collect()
-        
-        os.makedirs(output_path, exist_ok=True)
-        
-        file_name = model_id
-        if '/' in file_name:
-            file_name = file_name.split('/')[-1]
+        torch.cuda.synchronize()
 
-        with open(os.path.join(output_path, f"{file_name}-temp0{temp*10:.0f}.txt"), "w", encoding="utf-8") as f:
-            f.write(generated_texts)
+        for temp in temps:
+            messages = [
+                {"role": "user", "content": instruct}
+            ]
+            
+            outputs = pipeline(
+                messages,
+                max_new_tokens=1024,
+                do_sample=True,
+                temperature=temp,
+                top_p=0.4,
+            )
+
+            generated_texts = outputs[0]["generated_text"][1]['content']#[len(instruct):]
+            #print(generated_texts)
+            del outputs
+            del messages
+            torch.cuda.empty_cache()
+            gc.collect()
+            
+            resultEssaysPath = "results/teste"
+
+            os.makedirs(os.path.join(resultEssaysPath, output_path), exist_ok=True)
+            
+            file_name = model_id
+            if '/' in file_name:
+                file_name = file_name.split('/')[-1]
+
+            with open(os.path.join(resultEssaysPath, output_path, f"{file_name}-temp0{temp*10:.0f}.txt"), "w", encoding="utf-8") as f:
+                f.write(generated_texts)
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run text generation with Hugging Face pipeline.")
