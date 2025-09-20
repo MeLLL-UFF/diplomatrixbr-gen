@@ -1,20 +1,20 @@
 import os
 import pandas as pd
 import json
-from funcs import qtd_frases, qtd_palavras
+from funcs import qtd_frases, qtd_palavras, getYearsList
 
 # Definindo o diretório raiz onde a estrutura de pastas das modificações começa
 root_directory = os.getcwd()
 
-dirlist = os.listdir(root_directory)
-dirlist.pop(dirlist.index("Scripts"))
+essayPath = os.path.join(os.getcwd(), "base_essays")
+resultsPath = os.path.join(os.getcwd(), "results", "metrics")
 
-for year in dirlist:
+yearList = os.listdir(essayPath)
+
+for year in yearList:
     data = []
 
-    jsonfile = ""
-    for file in os.listdir(os.path.join(root_directory, year)):
-        jsonfile = os.path.join(root_directory, year, file) if file.endswith(".json") else jsonfile
+    jsonfile = os.path.join(essayPath, year)
 
     # Lendo o JSON para um arquivo
     with open(jsonfile, 'r', encoding='utf8') as j:
@@ -35,4 +35,4 @@ for year in dirlist:
         })
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.join(root_directory, year, "DatasetCandidatos.csv"))
+    df.to_csv(os.path.join(resultsPath, year.split(".")[0], "DatasetCandidatos.csv"))
