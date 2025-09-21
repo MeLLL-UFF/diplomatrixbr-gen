@@ -7,80 +7,72 @@ from evaluate import load
 from ctc_score import DialogScorer, FactualConsistencyScorer
 import torch
 
-bleu, bert_score, rouge = load("bleu"), load("bertscore"), load("rouge")
+bleu, bertScore, rouge = load("bleu"), load("bertscore"), load("rouge")
 
-factual_scorer = FactualConsistencyScorer(align='E-bert', device='cuda' if torch.cuda.is_available() else 'cpu')
-dial_scorer = DialogScorer(align='E-bert', device='cuda' if torch.cuda.is_available() else 'cpu')
+factualScorer = FactualConsistencyScorer(align='E-bert', device='cuda' if torch.cuda.is_available() else 'cpu')
+dialogScorer = DialogScorer(align='E-bert', device='cuda' if torch.cuda.is_available() else 'cpu')
 
+rootPath = os.path.join(os.getcwd(), "results", "metrics")
 
-root_path = os.getcwd()
+yearList = os.listdir(rootPath)
 
-dirlist = os.listdir(root_path)
+for year in yearList:
+    jsonFile = os.path.join(os.getcwd(), "base_essays", f"{year}.json")
 
-#dirlist.pop(dirlist.index("Scripts"))
-dirlist = [dirlist.pop(dirlist.index("2022"))]
+    dfCandidates = pd.read_csv(os.path.join(rootPath, year, "DatasetCandidatos.csv"))
 
-for year in dirlist:
-    #Procura JSON dentro de cada diretório
-    jsonfile = os.path.join(root_path, year)
-    for file in os.listdir(os.path.join(root_path, year)):
-        jsonfile = os.path.join(jsonfile, file) if file.endswith(".json") else jsonfile
+    with open(jsonFile, 'r', encoding='utf8') as j:
+        jsonCandidates = json.load(j)
 
-    #df_candidates = pd.read_csv(os.path.join(root_path, year, "DatasetCandidatos.csv"))
-    df_candidates = pd.read_csv(os.path.join(root_path, "2022\Dataset\dataset_redacoes_candidatos.csv"))
+    referenceColumn = 'redacao'
+    statement = jsonCandidates['Pergunta']
+    predictionColumn = 'texto_prompt'
 
-    with open(jsonfile, 'r', encoding='utf8') as j:
-        json_candidates = json.load(j)
+    dfModels = pd.read_csv(os.path.join(rootPath, year, "DatasetModels.csv"))
 
-    reference_column = 'redacao'
-    statement = json_candidates['Pergunta']
-    prediction_column = 'texto_prompt_0'
+    metricsResults = []
 
-    #df_models = pd.read_csv(os.path.join(root_path, year, "Dataset.csv"))
-    df_models = pd.read_csv(os.path.join(root_path, "2022\Dataset\dataset_redacoes_prompt0.csv"))
+    for indexCandidate, rowsCandidate in dfCandidates.iterrows():
+        referenceText = rowsCandidate[referenceColumn]
 
-    metrics_results = []
-
-    for index_candidate, rows_candidate in df_candidates.iterrows():
-        reference_text = rows_candidate[reference_column]
-
-        for index_essay, rows_essay in df_models.iterrows():
-            prediction_text = rows_essay[prediction_column]
+        for indexEssay, rowsEssay in dfModels.iterrows():
+            predictionText = rowsEssay[predictionColumn]
             
             # Calculando ROUGE
-            rouge_results = rouge.compute(predictions=[prediction_text], references=[reference_text])
+            rougeResults = rouge.compute(predictions=[predictionText], references=[referenceText])
 
             # Calculando BERTscore
-            bertscore_results = bert_score.compute(predictions=[prediction_text], references=[reference_text], model_type='bert-base-multilingual-cased')
+            bertScoreResults = bertScore.compute(predictions=[predictionText], references=[referenceText], model_type='bert-base-multilingual-cased')
 
             # Calculando BLEU
-            bleu_results = bleu.compute(predictions=[prediction_text], references=[reference_text])
+            bleuResults = bleu.compute(predictions=[predictionText], references=[referenceText])
 
             # Calculando CTC
-            groundness = dial_scorer.score(fact=statement, dialog_history=[], hypo=prediction_text, aspect='groundedness')
-            groundness_reference = dial_scorer.score(fact=reference_text, dialog_history=[], hypo=prediction_text, aspect='groundedness')
-            factual = factual_scorer.score(grounding=statement, hypo=prediction_text)
-            factual_reference = factual_scorer.score(grounding=reference_text, hypo=prediction_text)
-            CTC_results = {'groundness': groundness, 'groundness_ref': groundness_reference, 'factual': factual, 'factual_ref': factual_reference}
+            groundness = dialogScorer.score(fact=statement, dialog_history=[], hypo=predictionText, aspect='groundedness')
+            groundnessReference = dialogScorer.score(fact=referenceText, dialog_history=[], hypo=predictionText, aspect='groundedness')
+            factual = factualScorer.score(grounding=statement, hypo=predictionText)
+            factualReference = factualScorer.score(grounding=referenceText, hypo=predictionText)
+            ctcResults = {'groundness': groundness, 'groundnessRef': groundnessReference, 'factual': factual, 'factualRef': factualReference}
 
-            metrics_results.append({
-                'id': f"{index_candidate}_{rows_candidate['candidato']}",
-                'modification_type': prediction_column,
-                'generator_model': rows_essay['modelo'],
-                'BLEU_score': bleu_results['bleu'],
-                'BERTScore_Precision': bertscore_results['precision'][0],
-                'BERTScore_Recall': bertscore_results['recall'][0],
-                'BERTScore_F1': bertscore_results['f1'][0],
-                'rouge1': rouge_results['rouge1'],
-                'rouge2': rouge_results['rouge2'],
-                'rougeL': rouge_results['rougeL'],
-                'rougeLsum': rouge_results['rougeLsum'],
-                'CTC_groundness': CTC_results['groundness'],
-                'CTC_groundness_ref': CTC_results['groundness_ref'],
-                'CTC_factual': CTC_results['factual'],
-                'CTC_factual_ref': CTC_results['factual_ref']
+            metricsResults.append({
+                'id': f"{indexCandidate}_{rowsCandidate['candidato']}",
+                'generatorModel': rowsEssay['modelo'],
+                'bleuScore': bleuResults['bleu'],
+                'bertScorePrecision': bertScoreResults['precision'][0],
+                'bertScoreRecall': bertScoreResults['recall'][0],
+                'bertScoreF1': bertScoreResults['f1'][0],
+                'rouge1': rougeResults['rouge1'],
+                'rouge2': rougeResults['rouge2'],
+                'rougeL': rougeResults['rougeL'],
+                'rougeLsum': rougeResults['rougeLsum'],
+                'ctcGroundness': ctcResults['groundness'],
+                'ctcGroundnessRef': ctcResults['groundnessRef'],
+                'ctcFactual': ctcResults['factual'],
+                'ctcFactualRef': ctcResults['factualRef']
             })
 
-        metrics_df = pd.DataFrame(metrics_results)
+        metricsDf = pd.DataFrame(metricsResults)
 
-    metrics_df.to_csv(f"{root_path}/{year}/MetricasRedacoesDiplomatas.csv", index=False, sep=';', decimal=',')
+    os.makedirs(os.path.join(os.getcwd(), "results", "metrics", year), exist_ok=True)
+
+    metricsDf.to_csv(os.path.join(os.getcwd(), "results", "metrics", year, "MetricasTeste.csv"), index=False, sep=';', decimal=',')
