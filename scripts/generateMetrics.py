@@ -75,4 +75,4 @@ for year in yearList:
 
     os.makedirs(os.path.join(os.getcwd(), "results", "metrics", year), exist_ok=True)
 
-    metricsDf.to_csv(os.path.join(os.getcwd(), "results", "metrics", year, "MetricasTeste.csv"), index=False, sep=';', decimal=',')
+    metricsDf.to_csv(os.path.join(os.getcwd(), "results", "metrics", year, "MetricasRedacoesDiplomatas.csv"), index=False, sep=';', decimal=',')

@@ -10,52 +10,7 @@ from matplotlib.projections import register_projection
 from matplotlib.projections.polar import PolarAxes
 from matplotlib.spines import Spine
 from matplotlib.transforms import Affine2D
-
-
-def namesToCode(name):
-    dic = {
-    "gpt4o_temp03": "gpt4o_03",
-    "gpt4o_temp05": "gpt4o_05",
-    "gpt4o_temp07": "gpt4o_07",
-    "command_r_plus_08_2024_temp03": "command-r-plus+03",
-    "command_r_plus_08_2024_temp03": "command-r-plus+03",
-    "command_r_plus_08_2024_temp05": "command-r-plus+05",
-    "gemma_27b_temp03": "gemma27b_03",
-    "gemma_27b_temp05": "gemma27b_05",
-    "gemma_27b_temp07": "gemma27b_07",
-    "gemma_2_9b_it_temp03": "gemma9b_03",
-    "gemma_2_9b_it_temp05": "gemma9b_05",
-    "gemma_2_9b_it_temp07": "gemma9b_07",
-    "llama_405b_temp03": "llama405b_03",
-    "llama_405b_temp05": "llama405b_05",
-    "llama_405b_temp07": "llama405b_07",
-    "llama_3.1_8b_instruct_temp03": "llama8b_03",
-    "llama_3.1_8b_instruct_temp05": "llama8b_05",
-    "llama_3.1_8b_instruct_temp07": "llama8b_07",
-    "mixtral_22b_temp03": "mixtral22b_03",
-    "mixtral_22b_temp05": "mixtral22b_05",
-    "mixtral_22b_temp07": "mixtral22b_07",
-    "mistral_7b_instruct_v0.3_temp03": "mixtral7b_03",
-    "mistral_7b_instruct_v0.3_temp05": "mixtral7b_05",
-    "mistral_7b_instruct_v0.3_temp07": "mixtral7b_07",
-    "phi_3_small_8k_instruct_temp03": "phi3_03",
-    "phi_3_small_8k_instruct_temp05": "phi3_05",
-    "phi_3_small_8k_instruct_temp07": "phi3_07",
-    "phi_4_temp03": "phi4_03",
-    "phi_4_temp05": "phi4_05",
-    "phi_4_temp07": "phi4_07",
-    "qwen_72b_temp03": "qwen72b_03",
-    "qwen_72b_temp05": "qwen72b_05",
-    "qwen_72b_temp07": "qwen72b_07",
-    "qwen2.5_7b_instruct_temp03": "qwen7b_03",
-    "qwen2.5_7b_instruct_temp05": "qwen7b_05",
-    "qwen2.5_7b_instruct_temp07": "qwen7b_07",
-    "sabia3_temp03": "sabia_03",
-    "sabia3_temp05": "sabia_05",
-    "sabia3_temp07": "sabia_07"
-    }
-
-    return dic.get(name)
+from funcs import namesToCode, getYearsList
 
 def dataTuples(path):
     df = pd.read_csv(path, sep=';')
@@ -77,7 +32,7 @@ def dataTuples(path):
         resp = df[df["id"] == c]
 
         temp = []
-        for col in (list(resp.columns))[3:]:
+        for col in (list(resp.columns))[2:]:
             tempCorrigida = list(resp[col])
             for i in range(len(tempCorrigida)):
                 tempCorrigida[i] = tempCorrigida[i].replace(",", ".")
@@ -178,17 +133,14 @@ def radar_factory(num_vars, frame='circle'):
     return theta
 
 if __name__ == '__main__':
-    basepath = os.getcwd()
-    essaysYears = os.listdir(basepath)
-    #Retirando a pasta "Scrips"
-    essaysYears.pop(essaysYears.index("Scripts"))
+    basePath = os.getcwd()
+    #essaysYears = os.listdir(os.path.join(basePath, "results", "metrics"))
+    essaysYears = getYearsList()
 
     for year in essaysYears:
-        pathcsv = os.path.join(basepath, year, "MetricasRedacoesDiplomatas.csv")
+        pathcsv = os.path.join(basePath, "results", "metrics", year, "MetricasRedacoesDiplomatas.csv")
 
-        pathjson = ""
-        for file in os.listdir(os.path.join(basepath, year)):
-            pathjson = os.path.join(basepath, year, file) if file.endswith(".json") else pathjson
+        pathjson = os.path.join(basePath, "base_essays", f"{year}.json")
 
         with open(pathjson, 'r', encoding="utf8") as j:
             jsoncandidatos = json.load(j)
@@ -198,8 +150,7 @@ if __name__ == '__main__':
             nome, nota = c["Nome"], c["Nota"]
             candidatos.append((nome, nota))
 
-        if not(os.path.exists(os.path.join(basepath, year, "Graficos"))):
-            os.makedirs(os.path.join(basepath, year, "Graficos"))
+        os.makedirs(os.path.join(os.getcwd(), "results", "plots"), exist_ok=True)
 
         data = dataTuples(pathcsv)
         
@@ -243,7 +194,9 @@ if __name__ == '__main__':
             
             candidato = candidato.split("_")[-1]
 
-            plt.savefig(f"{basepath}\{year}\Graficos\{title}.png")
+            os.makedirs(os.path.join(basePath, "results", "plots", year), exist_ok=True)
+
+            plt.savefig(os.path.join(basePath, "results", "plots", year, f"{title}.png"))
             #plt.show()
             plt.close()
             data.pop(0)
