@@ -57,18 +57,18 @@ for year in yearList:
             metricsResults.append({
                 'id': f"{indexCandidate}_{rowsCandidate['candidato']}",
                 'generatorModel': rowsEssay['modelo'],
-                'bleuScore': bleuResults['bleu'],
-                'bertScorePrecision': bertScoreResults['precision'][0],
-                'bertScoreRecall': bertScoreResults['recall'][0],
-                'bertScoreF1': bertScoreResults['f1'][0],
+                'BLEU_score': bleuResults['bleu'],
+                'BERTScore_Precision': bertScoreResults['precision'][0],
+                'BERTScore_Recall': bertScoreResults['recall'][0],
+                'BERTScore_F1': bertScoreResults['f1'][0],
                 'rouge1': rougeResults['rouge1'],
                 'rouge2': rougeResults['rouge2'],
                 'rougeL': rougeResults['rougeL'],
                 'rougeLsum': rougeResults['rougeLsum'],
-                'ctcGroundness': ctcResults['groundness'],
-                'ctcGroundnessRef': ctcResults['groundnessRef'],
-                'ctcFactual': ctcResults['factual'],
-                'ctcFactualRef': ctcResults['factualRef']
+                'CTC_groundness': ctcResults['groundness'],
+                'CTC_groundness_ref': ctcResults['groundnessRef'],
+                'CTC_factual': ctcResults['factual'],
+                'CTC_factual_ref': ctcResults['factualRef']
             })
 
         metricsDf = pd.DataFrame(metricsResults)

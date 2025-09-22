@@ -22,7 +22,7 @@ def dataTuples(path):
     #Acertando o nome dos modelos
     data = []
     ind = df[df["id"] == candidatos[0]]
-    ind = list(ind["generator_model"])
+    ind = list(ind["generatorModel"])
 
     for i in range(len(ind)):
         ind[i] = namesToCode(ind[i])
