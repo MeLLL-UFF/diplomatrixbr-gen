@@ -19,13 +19,8 @@ yearList = os.listdir(essayPath)
 for year in yearList:
     data = []
     
-    #Quick fix for MacOS
-    if year == ".DS_Store": continue
-
     # Pastas com os textos de referência
     for model in os.listdir(os.path.join(essayPath, year)):
-
-        if model == ".DS_Store": continue
 
         modelDir = os.path.join(essayPath, year, model)
         for text in os.listdir(modelDir):
