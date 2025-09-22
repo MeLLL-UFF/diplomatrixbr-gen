@@ -12,7 +12,7 @@ Desenvolvido ao longo do trabalho **Diplomatrix-BR: Um Corpus Paralelo de Redaç
 - [Modelos de Linguagem](#modelos-de-linguagem)
 - [Instalação e Configuração](#instalação-e-configuração)
 - [Como Usar](#como-usar)
-- [Métricas e Avaliação](#métricas-e-avaliação)
+- [Métricas e Análises](#métricas-e-análises)
 - [Resultados](#resultados)
 - [Scripts Disponíveis](#scripts-disponíveis)
 - [Estrutura dos Dados](#estrutura-dos-dados)
