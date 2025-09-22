@@ -23,3 +23,13 @@ python scripts/essayGeneration/gen.py --model_id $MODEL_ID --hf_token $HF_TOKEN 
 MODEL_ID="meta-llama/Llama-3.1-8B-Instruct"
 OUTPUT_PATH="LLAMA-8b/"
 python scripts/essayGeneration/gen.py --model_id $MODEL_ID --hf_token $HF_TOKEN --temps $TEMPS --output_path $OUTPUT_PATH
+
+python scripts/essayGeneration/generate_chatgpt_essays.py
+
+python scripts/essayGeneration/generate_command_essays.py
+
+python scripts/essayGeneration/generate_sabia_essays.py
+
+python scripts/datasetCreation/criacao_dfs_redacoes.py
+
+python scripts/datasetCreation/criacao_dfs_modelos.py
