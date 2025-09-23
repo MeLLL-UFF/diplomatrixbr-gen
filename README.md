@@ -218,7 +218,3 @@ Se você usar este corpus em sua pesquisa, por favor cite:
   year={2024}
 }
 ```
-
-## Licença
-
-Este projeto está sob a licença [inserir licença aqui].
