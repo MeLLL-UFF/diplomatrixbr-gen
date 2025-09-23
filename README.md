@@ -66,13 +66,13 @@ diplomatrixbr-gen/
 
 ## Dados 📊
 
-### Redações Humanas (`base_essays/`) 👨‍🎓
+### Redações Humanas (`base_essays/`)
 - **88 redações** de candidatos aprovados no CACD
 - Distribuídas ao longo de **10 anos** (2013-2023)
 - Incluem **notas atribuídas** pelos avaliadores
 - Contêm **métricas linguísticas** pré-calculadas
 
-### Redações Geradas (`results/gen_essays/`) 🤖
+### Redações Geradas (`results/gen_essays/`)
 - **390 redações** geradas por 13 modelos diferentes
 - **3 temperaturas** de geração por modelo (0.3, 0.5, 0.7)
 
