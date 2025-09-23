@@ -1,10 +1,10 @@
-# Diplomatrix-BR
+# Diplomatrix-BR 🎓📝
 
 Desenvolvido ao longo do trabalho **Diplomatrix-BR: Um Corpus Paralelo de Redações de Autoria Humana e de LLMs no Concurso de Diplomacia Brasileira**, este corpus contém redações escritas com base nos enunciados e temas apresentados nas provas do CACD (Concurso de Admissão à Carreira Diplomática), sendo 390 geradas por 13 LLMs - `gen_essays` e 88 de candidatos aprovados - `base_essays`. Além disso, este repositório também conta com o código implementado e os resultados obtidos.
 
 **Autores:** Rodrigo Cavalcanti João (UFF), Gabriela Casini (UFF), Gabriel Assis (UFF), Livy Real (IComp/UFAM), Daniela Vianna, Paulo Mann (UFRJ), Aline Paes (UFF)
 
-## Índice
+## Índice 📚
 
 - [Visão Geral](#visão-geral)
 - [Estrutura do Repositório](#estrutura-do-repositório)
@@ -17,7 +17,7 @@ Desenvolvido ao longo do trabalho **Diplomatrix-BR: Um Corpus Paralelo de Redaç
 - [Scripts Disponíveis](#scripts-disponíveis)
 - [Estrutura dos Dados](#estrutura-dos-dados)
 
-## Visão Geral
+## Visão Geral 🔍
 
 O Diplomatrix-BR é um corpus paralelo que contém redações dissertativo-argumentativas baseadas em questões dos concursos do Instituto Rio Branco (CACD) de 2013 a 2023. O corpus permite comparações sistemáticas entre textos produzidos por candidatos humanos aprovados e textos gerados por diferentes modelos de linguagem.
 
@@ -29,7 +29,7 @@ O Diplomatrix-BR é um corpus paralelo que contém redações dissertativo-argum
 - **Métricas linguísticas abrangentes** (BLEU, BERT-Score, ROUGE, CTC)
 - **Análises de correlação** entre métricas automáticas e avaliação humana
 
-## Estrutura do Repositório
+## Estrutura do Repositório 📁
 
 ```
 diplomatrixbr-gen/
@@ -64,20 +64,19 @@ diplomatrixbr-gen/
 └── run.sh                # Script principal de execução
 ```
 
-## Dados
+## Dados 📊
 
-### Redações Humanas (`base_essays/`)
+### Redações Humanas (`base_essays/`) 👨‍🎓
 - **88 redações** de candidatos aprovados no CACD
 - Distribuídas ao longo de **10 anos** (2013-2023)
 - Incluem **notas atribuídas** pelos avaliadores
 - Contêm **métricas linguísticas** pré-calculadas
 
-### Redações Geradas (`results/gen_essays/`)
+### Redações Geradas (`results/gen_essays/`) 🤖
 - **390 redações** geradas por 13 modelos diferentes
 - **3 temperaturas** de geração por modelo (0.3, 0.5, 0.7)
-- **30 redações por modelo por ano** (3 temperaturas × 10 anos)
 
-## Modelos de Linguagem
+## Modelos de Linguagem 🤖
 
 O corpus inclui redações geradas pelos seguintes modelos:
 
@@ -95,7 +94,7 @@ O corpus inclui redações geradas pelos seguintes modelos:
 12. **Qwen2-7b** (Alibaba)
 13. **Sabia** (Maritaca AI)
 
-## Instalação e Configuração
+## Instalação e Configuração ⚙️
 
 ### Pré-requisitos
 - Python 3.8+
@@ -119,7 +118,7 @@ Configure as chaves de API necessárias:
 - **Cohere API Key** para Command R+
 - **Maritalk API Key** para Sabia
 
-## Como Usar
+## Como Usar 🚀
 
 ### Geração de Redações
 ```bash
@@ -146,7 +145,7 @@ python scripts/correlationMetricScore.py
 python scripts/radarCharts.py
 ```
 
-## Métricas e Análises
+## Métricas e Análises 📈
 
 ### Métricas Automáticas
 - **BLEU:** Precisão baseada em n-gramas
@@ -164,7 +163,7 @@ python scripts/radarCharts.py
 - Análises de correlação entre métricas
 - Distribuições de scores por temperatura
 
-## Scripts Disponíveis
+## Scripts Disponíveis 🛠️
 
 ### Geração de Redações
 - `scripts/essayGeneration/gen.py` - Geração com modelos Hugging Face
@@ -185,7 +184,7 @@ python scripts/radarCharts.py
 ### Utilitários
 - `scripts/funcs.py` - Funções auxiliares e constantes
 
-## Estrutura dos Dados
+## Estrutura dos Dados 🗃️
 
 ### Formato JSON das Redações Base
 ```json
@@ -197,12 +196,6 @@ python scripts/radarCharts.py
       "Name": "Nome do Candidato",
       "Score": 52.5,
       "Essay": "Texto da redação...",
-      "Linguistic_Metrics": {
-        "flesch": 4.9116,
-        "words": 629,
-        "sentences": 26,
-        ...
-      }
     }
   ]
 }
@@ -214,7 +207,7 @@ O arquivo `Diplomatrix.json` contém todo o corpus estruturado com:
 - Questões e enunciados por ano
 - Metadados temporais e contextuais
 
-## Citação
+## Citação 📚
 
 Se você usar este corpus em sua pesquisa, por favor cite:
 
