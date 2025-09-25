@@ -1,7 +1,7 @@
 #!/bin/bash
 #BEFORE RUNNING IT, RUN ON TERMINAL ----> chmod +x run.sh
 
-HF_TOKEN="YOUR API KEY HERE"
+HF_TOKEN="YOUR-API-KEY-HERE"
 TEMPS="0.3 0.5 0.7"
 
 MODEL_ID="mistralai/Mistral-7B-Instruct-v0.3"

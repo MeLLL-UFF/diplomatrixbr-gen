@@ -20,6 +20,7 @@ safetensors>=0.6.2
 protobuf>=6.32.1
 einops>=0.8.1
 pytest>=8.4.2
+rouge_score>=0.1.2
 
 # LLM APIs
 maritalk>=0.2.6

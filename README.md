@@ -76,6 +76,12 @@ diplomatrixbr-gen/
 - **390 redações** geradas por 13 modelos diferentes
 - **3 temperaturas** de geração por modelo (0.3, 0.5, 0.7)
 
+### Atenção:
+As redações geradas por modelos grandes (>9b) foram obtidas através da plataforma **[LMArena](https://lmarena.ai/)**.
+Não nos responsabilizamos pela geração de redações de modelos sem o uso de APIs
+
+As redações usadas durante o desenvolvimento da pesquisa estão disponíveis neste repositório para fins de reprodução de experimentos
+
 ## Modelos de Linguagem 🤖
 
 O corpus inclui redações geradas pelos seguintes modelos:
@@ -119,6 +125,17 @@ Configure as chaves de API necessárias:
 - **Maritalk API Key** para Sabia
 
 ## Como Usar 🚀
+### Observação:
+**Verifique se o comando está adequado ao seu sistema operacional!**
+No Windows:
+```bash
+python run/this/python_script.py...
+```
+
+No Linux/MacOS:
+```bash
+python3 run/this/python_script.py...
+```
 
 ### Geração de Redações
 ```bash
@@ -127,7 +144,7 @@ chmod +x gen.sh
 ./gen.sh
 
 # Para gerar com um modelo específico
-python scripts/essayGeneration/gen.py --model_id "microsoft/Phi-3-small-8k-instruct" --hf_token YOUR_TOKEN --temps 0.3 0.5 0.7 --output_path "PHI-3-SMALL/"
+python3 -m scripts.essayGeneration.gen --model_id "microsoft/Phi-3-small-8k-instruct" --hf_token YOUR_TOKEN --temps 0.3 0.5 0.7 --output_path "PHI-3-SMALL/"
 ```
 
 ### Cálculo de Métricas
