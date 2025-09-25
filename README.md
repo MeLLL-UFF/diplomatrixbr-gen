@@ -127,6 +127,7 @@ Configure as chaves de API necessárias:
 ## Como Usar 🚀
 ### Observação:
 **Verifique se o comando está adequado ao seu sistema operacional!**
+
 No Windows:
 ```bash
 python run/this/python_script.py...
