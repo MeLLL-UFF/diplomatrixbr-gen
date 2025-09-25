@@ -1,5 +1,5 @@
-python scripts/generateMetrics.py
+python3 scripts/generateMetrics.py
 
-python scripts/radarCharts.py
+python3 scripts/radarCharts.py
 
-python scripts/correlationMetricScore.py
+python3 scripts/correlationMetricScore.py
