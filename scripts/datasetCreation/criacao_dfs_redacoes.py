@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import json
-from funcs import qtd_frases, qtd_palavras, getYearsList
+from ..funcs import qtd_frases, qtd_palavras, getYearsList
 
 # Definindo o diretório raiz onde a estrutura de pastas das modificações começa
 root_directory = os.getcwd()

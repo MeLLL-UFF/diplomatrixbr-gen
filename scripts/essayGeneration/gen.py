@@ -5,7 +5,7 @@ import torch
 import gc
 import os
 import json
-from funcs import getYearsList
+from ..funcs import getYearsList
 
 def main(model_id, hf_token, temps, output_path):
     login(token=hf_token)
@@ -20,7 +20,7 @@ def main(model_id, hf_token, temps, output_path):
         model=model_id,
         tokenizer=tokenizer,
         # The quantization line
-        model_kwargs={"torch_dtype": torch.bfloat16},
+        model_kwargs={"dtype": torch.bfloat16},
         device=device,
     )
 
@@ -53,31 +53,32 @@ def main(model_id, hf_token, temps, output_path):
                 {"role": "user", "content": instruct}
             ]
             
-            outputs = pipeline(
-                messages,
-                max_new_tokens=1024,
-                do_sample=True,
-                temperature=temp,
-                top_p=0.4,
-            )
+            try:
+                outputs = pipeline(
+                    messages,
+                    max_new_tokens=1024,
+                    do_sample=True,
+                    temperature=temp,
+                    top_p=0.4,
+                )
 
-            generated_texts = outputs[0]["generated_text"][1]['content']#[len(instruct):]
-            #print(generated_texts)
-            del outputs
-            del messages
-            torch.cuda.empty_cache()
-            gc.collect()
-            
-            resultEssaysPath = "results/teste"
+                generated_texts = outputs[0]["generated_text"][1]['content']#[len(instruct):]
+                
+                resultEssaysPath = os.path.join(os.getcwd(), "results", "teste", year)
 
-            os.makedirs(os.path.join(resultEssaysPath, output_path), exist_ok=True)
-            
-            file_name = model_id
-            if '/' in file_name:
-                file_name = file_name.split('/')[-1]
+                os.makedirs(os.path.join(resultEssaysPath, output_path), exist_ok=True)
+                
+                file_name = model_id
+                if '/' in file_name:
+                    file_name = file_name.split('/')[-1]
 
-            with open(os.path.join(resultEssaysPath, output_path, f"{file_name}-temp0{temp*10:.0f}.txt"), "w", encoding="utf-8") as f:
-                f.write(generated_texts)
+                with open(os.path.join(resultEssaysPath, output_path, f"{file_name}-temp0{temp*10:.0f}.txt"), "w", encoding="utf-8") as f:
+                    f.write(generated_texts)
+            finally:
+                del outputs
+                del messages
+                torch.cuda.empty_cache()
+                gc.collect()
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run text generation with Hugging Face pipeline.")

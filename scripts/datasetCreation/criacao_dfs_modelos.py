@@ -1,18 +1,14 @@
 import os
 import pandas as pd
-from funcs import qtd_frases, qtd_palavras, namingConsistency
+from ..funcs import qtd_frases, qtd_palavras, namingConsistency
 
 def read_file_content(file_path):
     """ Lê o conteúdo de um arquivo de texto e retorna como uma string. """
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read()
-    except UnicodeDecodeError:
-        with open(file_path, 'r', encoding='ANSI') as file:
-            return file.read()
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return file.read()
 
 # Definindo o diretório raiz onde a estrutura de pastas das modificações começa
-essayPath = os.path.join(os.getcwd(), "results\gen_essays")
+essayPath = os.path.join(os.getcwd(), "results", "gen_essays")
 
 yearList = os.listdir(essayPath)
 
@@ -27,6 +23,9 @@ for year in yearList:
             if(text.endswith('.txt')):
                 filename = text.split("\\")[-1]
                 filename = os.path.splitext(filename)[0]
+
+                print(os.path.join(modelDir, text))
+
                 text_content = read_file_content(os.path.join(modelDir, text))
                 data.append({
                     #MODEL NAMING CONSISTENCY!!!
@@ -39,4 +38,4 @@ for year in yearList:
 
     df = pd.DataFrame(data)
 
-    df.to_csv(f"results\metrics\{year}\DatasetModels.csv")
+    df.to_csv(os.path.join("results", "metrics", year, "DatasetModels.csv"))
