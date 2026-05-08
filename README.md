@@ -2,7 +2,7 @@
 
 [![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Hugging%20Face-yellow)](https://huggingface.co/datasets/melll-uff/diplomatrixbr-gen)
 
-Desenvolvido ao longo do trabalho **Diplomatrix-BR: Um Corpus Paralelo de Redações de Autoria Humana e de LLMs no Concurso de Diplomacia Brasileira**, este corpus contém redações escritas com base nos enunciados e temas apresentados nas provas do CACD (Concurso de Admissão à Carreira Diplomática), sendo 390 geradas por 13 LLMs - `gen_essays` e 88 de candidatos aprovados - `base_essays`. Além disso, este repositório também conta com o código implementado e os resultados obtidos.
+Desenvolvido ao longo do trabalho **Diplomatrix-BR: Um Corpus Paralelo de Redações de Autoria Humana e de LLMs no Concurso de Diplomacia Brasileira**, este corpus contém redações escritas com base nos enunciados e temas apresentados nas provas do CACD (Concurso de Admissão à Carreira Diplomática), sendo 390 geradas por 13 LLMs - `gen_essays` e 93 de candidatos aprovados - `base_essays`. Além disso, este repositório também conta com o código implementado e os resultados obtidos.
 
 **Autores:** Rodrigo Cavalcanti João (UFF), Gabriela Casini (UFF), Gabriel Assis (UFF), Livy Real (IComp/UFAM), Daniela Vianna, Paulo Mann (UFRJ), Aline Paes (UFF)
 
