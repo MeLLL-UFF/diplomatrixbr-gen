@@ -35,4 +35,6 @@ for year in yearList:
         })
 
     df = pd.DataFrame(data)
-    df.to_csv(os.path.join(resultsPath, year.split(".")[0], "DatasetCandidatos.csv"))
+    destination_path = os.path.join(resultsPath, year.split(".")[0])
+    os.makedirs(destination_path, exist_ok=True)
+    df.to_csv(os.path.join(destination_path, "DatasetCandidatos.csv"))
